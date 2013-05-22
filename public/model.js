@@ -40,8 +40,10 @@ var model = (function() {
 				},
 				presave: function() {
 					return this.validator();
-				}
-
+				},
+   				generateEmailLink: function() {
+   					return '<a href="mailto:' + this.email + '">' + this.username +'</a>';
+   				}
 			}
 		},
 		posts: {

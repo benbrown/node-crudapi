@@ -91,9 +91,13 @@ u.generateEmailLink(); // call custom method
 ```
 
 Calling u.save will:
+
 1. Trigger the presave method in the browser, validating the data
+
 2. Make an AJAX call to POST to /api/users
+
 3. The presave method will be called by Node as well, revalidating the data
+
 4. Data stored in mongoose
 
 
@@ -101,8 +105,12 @@ Calling u.save will:
 
 Since methods can be called on the server and in the browser, you need to be careful that you do not call anything that won't work in one of those contexts.
 
-Server methods can access other collections via the global.tables object, which is a reference to the Mongoose schema.
-IE, global.tables.user.find()
+You can access other collections via the global.tables object.
 
+```
+global.tables.user.find({username:'ben',limit:5},function(res) {
 
+});
+
+```
 

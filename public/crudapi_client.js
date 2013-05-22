@@ -92,15 +92,8 @@
 			}
 			
 			
-			api_obj.prototype.find = function(params,limit,offset,callback) {
-				
-				if (limit) {
-					params.limit = limit;
-				} 
-				if (offset) {
-					params.offset = offset;
-				}
-				
+			api_obj.prototype.find = function(params,callback) {
+								
 				$.ajax({
 					url: API_PREFIX + '/' + this.table,
 					type: 'get',
@@ -185,11 +178,12 @@
 				
 function crudapi_client(model) {
 	window.crudapi=[];
-
+	window.global = {tables:[]}; // match node syntax
 	for (var table in model) {
 		
 		window.crudapi[table] = window[table] = function() {};
 		window[table].prototype = new api_obj(table,model[table]);
+		window.global.tables[table] = new window[table]();
 		
 	}				
 }
