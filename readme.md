@@ -24,6 +24,31 @@ functions defined in _serverMethods will be available only in Node.
 
 functions defined in _clientMethods will be available only in the browser.
 
+Example:
+
+   var model = {
+   		users: {
+   			username: {type: 'String'},
+   			email: {type: 'String'},
+   			_methods: {
+   				presave: function() {
+   					if (!this.email) {
+   						return 'Validation failed.';
+   					}
+   					if (!this.username) {
+   						return 'Validation failed';	
+   					}
+   					
+   					return true;   				
+   				},
+   				generateEmailLink: function() {
+   					return '<a href="mailto:' + this.email + '">' + this.username +'</a>';
+   				
+   				}
+   			}
+   		}
+   }
+
 ## Hooks
 
 presave: called before an item is saved. return true to continue saving, or an error message to halt. handy for validation.
