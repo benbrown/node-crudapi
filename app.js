@@ -2,11 +2,9 @@ var express = require('express');
 var mongoose = require('mongoose');
 var hbs = require('hbs');
 
+var Schema = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
 
-var API_PREFIX = '/api';
-
-/// this defines 
-var model = require("./public/model.js");
 
 var app = express();
 app.configure(function(){
@@ -28,43 +26,18 @@ app.get('/',function(req,res) {
 });
 
 
-var generator = (function(app,model) {
-	
-	for (var table in model) {
-		
-		(function(table,schema) {
-			app.get(API_PREFIX+'/' + table,function(req,res) {
-				
-				console.log('Running a get on /'+table);
-				res.json(schema);
-				
-			});
 
-			app.get(API_PREFIX+'/' + table+'/:id',function(req,res) {
-				
-				console.log('Running a get on /'+table);
-				res.json({id:req.param('id')});
-				
-			});
+/// this defines the data model and any associated methods
+var model = require("./public/model.js");
+
+// this will create all the necessary CRUD api endpoints
+require('./crudapi')(app,model,'/api',mongoose);
 
 
-			app.post(API_PREFIX+'/' + table,function(req,res) {
-				
-				console.log('Running a post on /'+table);
-				console.log(req.body);
-				res.json(req.body);
-				
-			});
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/mingle');
+var db = mongoose.connection;
+db.on('error', function callback(err) { console.log('INGEST: Error connecting to mongo',err); });
+db.once('open', function callback () {
+	app.listen(process.env.PORT || 3000);
 
-		})(table,model[table]);
-		
-	}
-	
-	
-})(app,model);
-
-
-
-
-
-app.listen(process.env.PORT || 3000);
+});
