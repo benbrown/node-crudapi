@@ -24,7 +24,20 @@ functions defined in _serverMethods will be available only in Node.
 
 functions defined in _clientMethods will be available only in the browser.
 
-Example:
+
+## Hooks
+
+presave: called before an item is saved. return true to continue saving, or an error message to halt. handy for validation.
+
+preremove: called before an item is removed. handy for cleanup. return true to continue, or an error message to halt.
+
+postload: called after an item is loaded. return true to continue, or an error message to halt.
+
+prequery: called before a query is executed. accepts a Mongoose query object, and expects a modified query object as a return value.
+
+## Example
+
+In models.js:
 
 ```
    var model = {
@@ -50,12 +63,28 @@ Example:
    }
 ```
 
-## Hooks
+Will result in a Node-powered RESTful API with endpoints like:
 
-presave: called before an item is saved. return true to continue saving, or an error message to halt. handy for validation.
+GET /api/users - query collection
+POST /api/users - create new user
+GET /api/users/:id - retrieve user by id
+DELETE /api/users/:id - delete user
+PUT /api/users/:id - update user record by id
 
-preremove: called before an item is removed. handy for cleanup. return true to continue, or an error message to halt.
+And will also result in browser-based objects, such that:
 
-postload: called after an item is loaded. return true to continue, or an error message to halt.
+```
 
-prequery: called before a query is executed. accepts a Mongoose query object, and expects a modified query object as a return value.
+var u = new users();
+u.username = 'ben';
+u.email = 'ben@xoxco.com';
+u.save();
+u.generateEmailLink(); // call custom method
+
+```
+
+Calling u.save will:
+1. Trigger the presave method in the browser, validating the data
+2. Make an AJAX call to POST to /api/users
+3. The presave method will be called by Node as well, revalidating the data
+4. Data stored in mongoose
