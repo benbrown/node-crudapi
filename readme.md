@@ -26,6 +26,7 @@ functions defined in _clientMethods will be available only in the browser.
 
 Example:
 
+'''
    var model = {
    		users: {
    			username: {type: 'String'},
@@ -47,6 +48,7 @@ Example:
    			}
    		}
    }
+'''
 
 ## Hooks
 
