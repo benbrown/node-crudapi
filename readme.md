@@ -88,3 +88,14 @@ Calling u.save will:
 2. Make an AJAX call to POST to /api/users
 3. The presave method will be called by Node as well, revalidating the data
 4. Data stored in mongoose
+
+
+## Quirks
+
+Since methods can be called on the server and in the browser, you need to be careful that you do not call anything that won't work in one of those contexts.
+
+Server methods can access other collections via the global.tables object, which is a reference to the Mongoose schema.
+IE, global.tables.user.find()
+
+
+
