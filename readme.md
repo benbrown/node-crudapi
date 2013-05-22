@@ -38,7 +38,6 @@ Example:
    					if (!this.username) {
    						return 'Validation failed';	
    					}
-   					
    					return true;   				
    				},
    				generateEmailLink: function() {
