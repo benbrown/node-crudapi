@@ -65,11 +65,18 @@ In models.js:
 
 Will result in a Node-powered RESTful API with endpoints like:
 
+```
 GET /api/users - query collection
+
 POST /api/users - create new user
+
 GET /api/users/:id - retrieve user by id
+
 DELETE /api/users/:id - delete user
+
 PUT /api/users/:id - update user record by id
+```
+
 
 And will also result in browser-based objects, such that:
 
