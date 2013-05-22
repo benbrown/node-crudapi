@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+	<head>
+		
+		<script src="http://xoxco.com/js/jquery.min.js"></script>
+		<script src="model.js"></script>
+		<script type="text/javascript">
+			
+			var API_PREFIX = '/api';
+			
+			var api_obj = function(table,schema) {
+				this.table = table;
+				this.schema = schema;
+				
+/*
+// this doesn't work for some scope reason
+				for (var field in this.schema) {
+					(function(that,field,schema) {
+	
+						that.__defineGetter__(field, function(){
+					        return this.data[field];
+					    });
+			
+					    that.__defineSetter__(field, function(val){
+					       this.data[field] = val;
+					    });
+					 })(this,field,this.schema[field]);
+				}
+*/
+				
+				if (this.schema.methods) {
+					for (var method in this.schema.methods) {
+						this[method] = this.schema.methods[method];		
+					}
+				}
+
+				return this;
+			}
+			
+			api_obj.prototype.get = function(id) {
+				
+				$.ajax({
+					url: API_PREFIX+'/' + this.table + '/' + id,
+					type: 'get',
+					dataType: 'json',
+					success: function(json) {
+						console.log('GET SUCCESS',json);
+					}
+				});
+				
+			}
+			
+			api_obj.prototype.data = function() {
+			
+				var res = {};
+				for (var field in this.schema) {
+					res[field] = this[field];
+				}
+				
+				return res;
+			
+			}
+			
+			api_obj.prototype.save = function() {
+				
+				$.ajax({
+						url: API_PREFIX+'/' + this.table,
+						type: 'post',
+						dataType: 'json',
+						data: this.data(),
+						success: function(json) {
+							console.log('SAVE SUCCESS',json);
+						}
+				});
+			}
+		
+			$(function() {
+				
+				console.log(model);	
+				window.crudapi=[];
+				for (var table in model) {
+					
+					window.crudapi[table] = window[table] = function() {};
+					window[table].prototype = new api_obj(table,model[table]);
+					
+				}				
+				
+				
+			});
+		</script>
+		
+	</head>
+	<body>
+	</body>
+</html>
