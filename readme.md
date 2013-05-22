@@ -16,7 +16,7 @@ Node, Mongo, Express and Mongoose.
 
 Edit public/model.js to represent the collections and fields your app requires.
 
-Methods can be added to the schema via:
+Collections can be defined using standard Mongoose schema definition, with the addition the ability to define add-on methods and plugin hooks:
 
 functions defined in _methods will be available in Node and in browser.
 
