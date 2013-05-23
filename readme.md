@@ -47,11 +47,11 @@ functions defined in _clientMethods will be available only in the browser.
 
 ## Hooks
 
-presave(callback): called before an item is saved. callback must receive true or an error. handy for validation.
+presave(callback): called before an item is saved. callback must receive true to continue, or an error. handy for validation.
 
-preremove(callback): called before an item is removed. handy for cleanup. callback must receive true or an error.
+preremove(callback): called before an item is removed. handy for cleanup. callback must receive true to continue, or an error.
 
-postload: called after an item is loaded. callback must receive true or an error..
+postload(callback): called after an item is loaded. can modify the this variable. callback must receive true to continue, or an error.
 
 prequery: called before a query is executed. accepts a Mongoose query object, and expects a modified query object as a return value.
 
@@ -65,14 +65,16 @@ In models.js:
    			username: {type: 'String'},
    			email: {type: 'String'},
    			_methods: {
-   				presave: function() {
+   				presave: function(cb) {
    					if (!this.email) {
-   						return 'Validation failed.';
+   						cb.call(this, 'Validation failed.');
+   						return;
    					}
    					if (!this.username) {
-   						return 'Validation failed';	
+   						cb.call(this, 'Validation failed.');
+   						return;
    					}
-   					return true;   				
+   					cb.call(this,true);
    				},
    				generateEmailLink: function() {
    					return '<a href="mailto:' + this.email + '">' + this.username +'</a>';
@@ -105,7 +107,7 @@ And will also result in browser-based objects, such that:
 var u = new users();
 u.username = 'ben';
 u.email = 'ben@xoxco.com';
-u.save();
+u.save(function(err,saved) {...});
 u.generateEmailLink(); // call custom method
 
 ```
@@ -128,7 +130,7 @@ Since methods can be called on the server and in the browser, you need to be car
 You can access other collections via the global.tables object.
 
 ```
-global.tables.user.find({username:'ben',limit:5},function(res) {
+global.tables.user.find({username:'ben',limit:5},function(err,results) {
 
 });
 
