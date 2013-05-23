@@ -1,6 +1,26 @@
-		
+			// defined for node module compatibility
+			var module = {exports: {}};
+					
 			var API_PREFIX = '/api';
 			
+
+		// this function is where all the action happens
+		// loop over the tables in the model, creating matching accessor objects
+		// and setting them into the global context				
+		function crudapi_client(model) {
+			window.crudapi=[];
+			window.global = {tables:[]}; // match node syntax
+			for (var table in model) {
+				
+				window.crudapi[table] = window[table] = function() {};
+				window[table].prototype = new api_obj(table,model[table]);
+				window.global.tables[table] = new window[table]();
+				
+			}				
+		}
+
+
+
 			var api_obj = function(table,schema) {
 			
 					this.table = table;
@@ -175,15 +195,3 @@
 
 
 
-				
-function crudapi_client(model) {
-	window.crudapi=[];
-	window.global = {tables:[]}; // match node syntax
-	for (var table in model) {
-		
-		window.crudapi[table] = window[table] = function() {};
-		window[table].prototype = new api_obj(table,model[table]);
-		window.global.tables[table] = new window[table]();
-		
-	}				
-}
