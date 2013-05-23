@@ -70,6 +70,10 @@
 			
 		}
 		
+		function crudapi_yesman(cb) {
+			cb.call(this,true);
+		}
+		
 
 
 			var api_obj = function(table,schema) {
@@ -183,44 +187,50 @@
 				var that = this;
 				data =  that.data();
 				console.log('Got data');
-				if (this.presave) {
-					var hook_results = this.presave();
-					if (!(hook_results===true)) {
-						alert(hook_results);
-						return;
-					}
-				}
 				
-				var request = {
-					
-						dataType: 'json',
-						data: data,
-						success: function(json) {
-							if (json.error) {
-								console.log('ERROR',json.error);	
-							} else {
-								console.log('SAVE SUCCESS',json);
-								for (var field in json.result) {
-									that[field] = json.result[field];
+				var caller = this.presave ? this.presave : crudapi_yesman;
+
+				caller.call(this,function(res) {
+				
+					if (!(res===true)) {
+						alert(res);
+					} else {
+										
+						var request = {
+							
+								dataType: 'json',
+								data: data,
+								success: function(json) {
+									if (json.error) {
+										console.log('ERROR',json.error);	
+										alert(json.error);
+									} else {
+										console.log('SAVE SUCCESS',json);
+										for (var field in json.result) {
+											that[field] = json.result[field];
+										}
+									}
+									if (cb) cb.call(that,json.error,new window[that.table]().data(json.result));
 								}
-							}
-							if (cb) cb.call(that,json.error,new window[that.table]().data(json.result));
-						}
+							
+						};
+						
+						
 					
-				};
+						if (this._id) {
+							// use the UPDATE method
+							request.type='put';
+							request.url = API_PREFIX + '/' + this.table + '/' + this._id;					
+						} else {
+							// use the CREATE method
+							request.type='post';
+							request.url = API_PREFIX + '/' + this.table;
+						}
+						$.ajax(request);
+					}
+					
 				
-				
-			
-				if (this._id) {
-					// use the UPDATE method
-					request.type='put';
-					request.url = API_PREFIX + '/' + this.table + '/' + this._id;					
-				} else {
-					// use the CREATE method
-					request.type='post';
-					request.url = API_PREFIX + '/' + this.table;
-				}
-				$.ajax(request);
+				});
 		}
 
 

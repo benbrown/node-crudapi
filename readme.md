@@ -47,11 +47,11 @@ functions defined in _clientMethods will be available only in the browser.
 
 ## Hooks
 
-presave: called before an item is saved. return true to continue saving, or an error message to halt. handy for validation.
+presave(callback): called before an item is saved. callback must receive true or an error. handy for validation.
 
-preremove: called before an item is removed. handy for cleanup. return true to continue, or an error message to halt.
+preremove(callback): called before an item is removed. handy for cleanup. callback must receive true or an error.
 
-postload: called after an item is loaded. return true to continue, or an error message to halt.
+postload: called after an item is loaded. callback must receive true or an error..
 
 prequery: called before a query is executed. accepts a Mongoose query object, and expects a modified query object as a return value.
 

@@ -9,7 +9,7 @@ var model = (function() {
 			_clientMethods: {},
 			
 			_serverMethods: {
-				preremove: function() {
+				preremove: function(cb) {
 					
 					console.log('Cleaning up user before deleting');
 					var query = global.tables.posts.find({userId:this._id});
@@ -18,7 +18,7 @@ var model = (function() {
 							posts[x].remove();
 						}
 					});	
-					return true;			
+					cb.call(this,true);	
 				},
 			},
 
@@ -26,20 +26,36 @@ var model = (function() {
 				log: function() {
 					console.log('Logging user',this.username);
 				},
-				validator: function() {
+				validator: function(cb) {
 					console.log('Validating!');
 					if (!this.email) {
 						console.log('Failed on email');
-						return 'Email is required!';
+						cb.call(this,'Email is required!');
+						return;
 					}
 					if (!this.username) {
 						console.log('Failed on username');
-						return 'Username is required';
+						cb.call(this,'Username is required');
+						return;
 					}
-					return true;
+					if (this.isNew || !this._id) {
+						var that = this;
+						global.tables.users.find(
+							{email: this.email},
+							function(err,res) { 
+								if (res.length>0) { 
+									cb.call(that,'User with this email already exists');
+								 } else {
+									 cb.call(that,true);
+								 } 
+						    }
+						);					
+					} else {
+						cb.call(this,true);
+					}
 				},
-				presave: function() {
-					return this.validator();
+				presave: function(cb) {
+					this.validator(cb);
 				},
    				generateEmailLink: function() {
    					return '<a href="mailto:' + this.email + '">' + this.username +'</a>';
@@ -55,24 +71,29 @@ var model = (function() {
 					query.populate('userId');
 					return query;
 				},
-				postload: function() {
-					return "Sorry you can't access this post"; 
+				postload: function(cb) {
+					// do something to test or modify this object?
+					this.title=this.title.toUpperCase();
+					cb.call(this,true);
+//					cb.call(this,"Sorry you can't access this post");
 				},
-				preremove: function() {
+				preremove: function(cb) {
 					console.log('REMOVING POST!');
-					return true;
+					cb.call(this,true);
 				}
 			},
 			_methods: { 
-				presave: function() {
+				presave: function(cb) {
 					if (!this.title) {
-						return 'title is required';
+						cb.call(this,'title is required');
+						return;
 					}
 					if (!this.userId) {
-						return 'userId is required';
+						cb.call(this, 'userId is required');
+						return;
 					}
 					
-					return true;					
+					cb.call(this,true);
 				}
 			}
 		}

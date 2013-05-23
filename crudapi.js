@@ -1,4 +1,8 @@
 module.exports = function(app,model,API_PREFIX,mongoose) {
+
+	function crudapi_yesman(cb) {
+		cb.call(this,true);
+	}
 	
 	global.tables = {};
 	
@@ -26,23 +30,25 @@ module.exports = function(app,model,API_PREFIX,mongoose) {
 			
 			if (mongoose_schema.methods.presave) {
 				mongoose_schema.pre('save',function(next) {
-					var results = this.presave();
-					if (!(results===true)) {
-						next(new Error(results));
-					} else {
-						next();
-					}
+					this.presave(function(res) {
+						if (!(res===true)) {
+							next(new Error(res));
+						} else {
+							next();
+						}						
+					});
 				});
 			}			
 			
 			if (mongoose_schema.methods.preremove) {
 				mongoose_schema.pre('remove',function(next) {
-					var results = this.preremove();
-					if (!(results===true)) {
-						next(new Error(results));
-					} else {
-						next();
-					}
+					this.preremove(function(res) {
+						if (!(res===true)) {
+							next(new Error(res));
+						} else {
+							next();
+						}						
+					});
 				});
 			}			
 
@@ -181,14 +187,14 @@ module.exports = function(app,model,API_PREFIX,mongoose) {
 					if (!obj) {
 						res.json({error:'Cannot find object'});						
 					} else {
-						if (obj.postload) {
-							var hook_results = obj.postload();
-							if (!(hook_results===true)) {
-								res.json({error:hook_results,result:null});
-								return;
+						var caller = obj.postload ? obj.postload : crudapi_yesman;
+						caller.call(obj,function(results) {
+							var err = null;
+							if (!(results===true)) {
+								err = results;							
 							}
-						}
-						res.json({error:err,result:obj.toObject()});
+							res.json({error:err,result:this.toObject()});
+						});
 					}
 				});
 				
