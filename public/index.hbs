@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+	<head>
+		
+		<script src="http://xoxco.com/js/jquery.min.js"></script>
+		<script src="crudapi_client.js"></script>
+		<script src="model.js"></script>
+
+		<script type="text/javascript">
+		
+			$(function() {
+				
+				crudapi_client(model);				
+				crudapi_docs(model,'#log');
+				
+			});
+		</script>
+		
+		<style>
+		
+			html,body { 
+				font-size: 16px;
+				margin: 0;
+				padding: 0;
+			}
+			
+			h1,h2,h3,h4,h5,h6 { margin: 20px 0px 5px; }
+			
+			#everything { 
+				padding: 2.5%;
+			}
+			
+			dt { 
+				font-weight: bold;
+				font-size: 24px;
+			}
+			
+			dd { 
+				margin-bottom: 20px;
+				
+			}
+		</style>
+		
+	</head>
+	<body>
+	
+		<div id="everything">
+			<div id="app">
+				<h1>node-CRUDAPI Example</h1>
+				<p>Output from CRUDAPI's activity appears below.</p>
+				<div id="log">
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

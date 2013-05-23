@@ -8,7 +8,7 @@ var ObjectId = Schema.ObjectId;
 
 var app = express();
 app.configure(function(){
-  app.set('views', __dirname + '/views');
+  app.set('views', __dirname + '/public');
  
   app.set('view engine', 'hbs');
   app.use(express.limit(10*1024*1024));
@@ -21,8 +21,7 @@ app.configure(function(){
 });
 
 app.get('/',function(req,res) {
-	console.log(model);
-	res.json(model);
+	res.render('index');
 });
 
 

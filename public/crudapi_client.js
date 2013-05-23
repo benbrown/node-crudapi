@@ -18,7 +18,57 @@
 				
 			}				
 		}
+		
+		function crudapi_docs(model,el) {
+		
+			var markup = '<h1>CRUDAPI Docs</h1>';
+			
+			markup = markup + '<p>Created accessor objects for ' + Object.keys(global.tables).length + ' data collections.</p>';
+			
+			markup = markup + '<dl>';
+			for (var table in model) {
+				
+				markup = markup + '<dt>' + table +'</dt>';
+				markup = markup + '<dd>var x = new ' +table + '();<br/>';
+				for (var field in model[table]) {
+					
+					if (field[0]!='_') {
+						markup = markup + 'x.'+field+'= $value; // $value is a ' + model[table][field].type + '<br/>';
+					}			
+				}
+				
+				
+				
+				markup = markup + '<h4>CRUD methods</h4>';				
+				markup = markup + 'x.save(function(err,saved_obj) {...});<br/>';
+				markup = markup + 'x.get($id,function(err,obj) {... });<br />';
+				markup = markup + 'x.remove(function(err,obj) { ... });<br/>';
+				
+				
 
+				markup = markup + '<h4>List methods</h4>';				
+				markup = markup + 'global.tables.'+table+'.find({name:val,name:val,offset:0,limit:20},function(err,results) { ... });<br/>';
+				
+				markup = markup + '<h4>User Defined Methods</h4>';
+				if (model[table]._methods) {
+					for (var method in model[table]._methods) {
+						markup = markup + 'x.' + method +'();<br/>';						
+					}
+				}				
+				if (model[table]._clientMethods) {
+					for (var method in model[table]._clientMethods) {
+						markup = markup + 'x.' + method +'();<br/>';						
+					}
+				}				
+				
+			}
+			
+			markup = markup + '</dl>';
+			
+			$(el).append(markup);
+			
+		}
+		
 
 
 			var api_obj = function(table,schema) {
