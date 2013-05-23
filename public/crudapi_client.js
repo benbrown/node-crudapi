@@ -21,7 +21,7 @@
 		
 		function crudapi_docs(model,el) {
 		
-			var markup = '<h1>CRUDAPI Docs</h1>';
+			var markup = '<h2>CRUDAPI Log</h2>';
 			
 			markup = markup + '<p>Created accessor objects for ' + Object.keys(global.tables).length + ' data collections.</p>';
 			
@@ -29,7 +29,7 @@
 			for (var table in model) {
 				
 				markup = markup + '<dt>' + table +'</dt>';
-				markup = markup + '<dd>var x = new ' +table + '();<br/>';
+				markup = markup + '<dd><p>var x = new ' +table + '();<br/>';
 				for (var field in model[table]) {
 					
 					if (field[0]!='_') {
@@ -39,17 +39,17 @@
 				
 				
 				
-				markup = markup + '<h4>CRUD methods</h4>';				
-				markup = markup + 'x.save(function(err,saved_obj) {...});<br/>';
+				markup = markup + '</p><h4>CRUD methods</h4>';				
+				markup = markup + '<p>x.save(function(err,saved_obj) {...});<br/>';
 				markup = markup + 'x.get($id,function(err,obj) {... });<br />';
-				markup = markup + 'x.remove(function(err,obj) { ... });<br/>';
+				markup = markup + 'x.remove(function(err,obj) { ... });</p>';
 				
 				
 
 				markup = markup + '<h4>List methods</h4>';				
-				markup = markup + 'global.tables.'+table+'.find({name:val,name:val,offset:0,limit:20},function(err,results) { ... });<br/>';
+				markup = markup + '<p>global.tables.'+table+'.find({name:val,name:val,offset:0,limit:20},function(err,results) { ... });</p>';
 				
-				markup = markup + '<h4>User Defined Methods</h4>';
+				markup = markup + '<h4>User Defined Methods</h4><p>';
 				if (model[table]._methods) {
 					for (var method in model[table]._methods) {
 						markup = markup + 'x.' + method +'();<br/>';						
@@ -60,6 +60,7 @@
 						markup = markup + 'x.' + method +'();<br/>';						
 					}
 				}				
+				markup = markup + '</p>';
 				
 			}
 			
