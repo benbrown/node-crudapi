@@ -8,6 +8,26 @@ node-crudapi will create the Mongoose schema, a Node RESTful CRUD api, AND a bro
 
 Both node and client versions of the objects defined in the model will have the same methods and will behave the same.
 
+## Using node-crudapi
+
+In your Node app:
+
+```
+/// this defines the data model and any associated methods
+var model = require("./public/model.js");
+
+// this will create all the necessary CRUD api endpoints
+require('./crudapi')(express_app,model,'/api',mongoose);
+```
+
+In your browser client Javascript:
+```
+<script src="model.js"></script>
+<script src="crudapi_client.js"></script>
+````
+
+The *same* file, model.js, is included in both the Node app and the browser app. The node-crudapi module and its matching crudapi_client.js, once instantiated, will create all the necessary API endpoints AND client accessor objects.
+
 ## Dependencies
 
 Node, Mongo, Express and Mongoose.
