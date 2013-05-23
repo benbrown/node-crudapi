@@ -1,6 +1,4 @@
-var model = (function() {
-	
-	return {
+var model =  {
 		users: {
 			username: {type: "String"},
 			email: {type: "String"},
@@ -75,7 +73,18 @@ var model = (function() {
 					// do something to test or modify this object?
 					this.title=this.title.toUpperCase();
 					cb.call(this,true);
-//					cb.call(this,"Sorry you can't access this post");
+
+					// FIX THIS
+					// we really want to be able to do things like
+					// check permissions on this object
+					// that is, can the current user (not in scope) access this post?
+					// this is a scope issue right now.
+								
+//					if (req.session.id!=1) {
+//						cb.call(this,"Sorry you can't access this post");					
+//					}
+					
+					
 				},
 				preremove: function(cb) {
 					console.log('REMOVING POST!');
@@ -99,7 +108,6 @@ var model = (function() {
 		}
 	}
 	
-})();
 
 // fix this
 // this reports an error in the browser

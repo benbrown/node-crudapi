@@ -8,11 +8,10 @@
 		// loop over the tables in the model, creating matching accessor objects
 		// and setting them into the global context				
 		function crudapi_client(model) {
-			window.crudapi=[];
 			window.global = {tables:[]}; // match node syntax
 			for (var table in model) {
 				
-				window.crudapi[table] = window[table] = function() {};
+				window[table] = function(data) { if (data) { this.data(data); } };
 				window[table].prototype = new api_obj(table,model[table]);
 				window.global.tables[table] = new window[table]();
 				
@@ -133,6 +132,7 @@
 
 					}
 				});
+				return this;
 				
 			}
 			
@@ -230,7 +230,9 @@
 					}
 					
 				
-				});
+				})
+				
+			return this;
 		}
 
 
@@ -253,6 +255,8 @@
 						}
 
 				}); 
+			return this;
+
 		}
 
 
