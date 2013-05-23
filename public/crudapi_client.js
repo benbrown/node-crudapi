@@ -123,9 +123,9 @@
 							for (var field in json.result) {
 								that[field] = json.result[field];
 							}
-							
-							if (cb) cb.call(that,new window[that.table]().data(json.result));
 						}
+							
+						if (cb) cb.call(that,json.error,new window[that.table]().data(json.result));
 
 					}
 				});
@@ -169,9 +169,9 @@
 					url: API_PREFIX + '/' + this.table,
 					type: 'get',
 					data: params,
-					success: function(results) {
+					success: function(json) {
 						if (callback) {
-							callback.call(null,results.result);
+							callback.call(null,json.error,json.result);
 						}
 					}
 				});
@@ -203,8 +203,8 @@
 								for (var field in json.result) {
 									that[field] = json.result[field];
 								}
-								if (cb) cb.call(that,new window[that.table]().data(json.result));
 							}
+							if (cb) cb.call(that,json.error,new window[that.table]().data(json.result));
 						}
 					
 				};
@@ -237,8 +237,9 @@
 								console.log('ERROR',json.error);	
 							} else {
 								console.log('REMOVE SUCCESS',json);
-								if (cb) cb.call(that);
 							}
+
+							if (cb) cb.call(that,json.error,json.result);
 						}
 
 				}); 
